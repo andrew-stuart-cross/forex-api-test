@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IApiResponse, IRate } from './_models';
 
 @Injectable({
   providedIn: 'root'
@@ -36,22 +37,4 @@ export class FetchService {
   get rates(): Observable<IRate[]> {
     return this.items$.asObservable();
   }
-}
-
-
-
-export interface IApiResponse {
-  result: string; //'success' or 'error'
-  error: string; // only if result is 'error'
-  provider: string; //"https://www.exchangerate-api.com",
-  terms: string; // "https://www.exchangerate-api.com/terms",
-  base: string; // "GBP",
-  date: Date; // "2021-10-19",
-  timeLast_updated: number; // 1634601602,
-  rates: any; //response is {} not [] !!!!
-}
-
-export interface IRate {
-  code: string; // "GBP"
-  rate: number; // 5.05 -- perhaps just use string type?
 }
