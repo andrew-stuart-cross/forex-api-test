@@ -14,43 +14,44 @@ export class FetchService {
   private readonly items$: BehaviorSubject<IRate[]> = new BehaviorSubject<IRate[]>([]);
   private readonly loading$ = new BehaviorSubject<boolean>(true);
   private readonly error$ = new BehaviorSubject<boolean>(false);
-  //public errorObject = null;
   //private readonly response$: BehaviorSubject<IApiResponse | null> = new BehaviorSubject<IApiResponse | null>(null);
 
   constructor(private _httpClient: HttpClient) { }
-
-  // *************
-  // see if it is possible to map IApiResponse
-  // *************
-
 
   public fetchList(baseCurrencyCode: string = 'GBP'): void {
 
     this.loading$.next(true);
 
     this._httpClient.get<IApiResponse>(`${_apiUrl}${baseCurrencyCode}`)
-      .pipe(finalize(() => this.loading$.next(false))
-      ,map(data => Object.keys(data.rates).map((key) => {
+      .pipe(map(data => Object.keys(data.rates).map((key) => {
         return <IRate>{
           code: key,
           rate: data.rates[key]
         }
-      }))).subscribe(receivedItems => {
-        //console.log(receivedItems);
+      })),
+        finalize(() => this.loading$.next(false))
+        // error handling with catchError is handled by the http interceptor, which retries the request
+        // catchError here is like the catch() block:
+        // return an Observable to keep the stream 'alive' (returning an error ends the stream)
+      ).subscribe(receivedItems => {
+        // success handler function
+        // console.log(receivedItems);
         this.items$.next(receivedItems);
       },
         (error => {
+          // error handler function
           // with the httpInterceptor, it returns String; or
-          //without the httpInterceptor, it returns HttpErrorResponse
-
-          //this.errorObject = error; //no need to send error to component
-          //console.log(error);
-          this.error$.next(true);
+          // without the httpInterceptor, it returns HttpErrorResponse
+          this.error$.next(true); // no need to send error to the component
         }),
-        () => { 
-          // The "onCompleted()" callback only fires after the "onSuccess()" has completed. It does not fire after the "onError()" callback
+        () => {
+          // completion handler function
+          // This "onCompleted()" callback only fires after the "onSuccess()" has completed.
+          // It does not fire after the "onError()" callback...
+          // i.e.: completion or error are mutually exclusive.
           // ==> this.loading$.next(false); moved to finalize in pipe
-        })
+        }
+      )
   }
 
   public get rates(): Observable<IRate[]> {

@@ -15,7 +15,6 @@ export class AppComponent {
     this._getData();
   }
 
-
   private _getData(): void {
     this._fetchService.fetchList();
   }

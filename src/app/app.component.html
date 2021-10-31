@@ -32,6 +32,7 @@
 <div *ngIf="(_fetchService.error | async) as ty">
 
 <h1>An error occurred...</h1>
-<h1>{{ ty }}</h1>
+<h1>error$ value: {{ ty }}</h1>
 <!-- 'reload' button which points at reload() -->
+<button (click)="reload()">Retry</button>
 </div>

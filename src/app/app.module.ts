@@ -16,7 +16,7 @@ import { httpInterceptorProviders } from './_httpInterceptors';
     HttpClientModule
   ],
   providers: [
-    //httpInterceptorProviders
+    httpInterceptorProviders
   ],
   bootstrap: [AppComponent]
 })
