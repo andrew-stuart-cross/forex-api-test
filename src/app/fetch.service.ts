@@ -12,8 +12,8 @@ const _apiUrl = 'https://api.exchangerate-api.com/v4/latest/';
 export class FetchService {
 
   private readonly items$: BehaviorSubject<IRate[]> = new BehaviorSubject<IRate[]>([]);
-  private readonly loading$ = new BehaviorSubject<boolean>(true);
-  private readonly error$ = new BehaviorSubject<boolean>(false);
+  private readonly loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  private readonly error$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   //private readonly response$: BehaviorSubject<IApiResponse | null> = new BehaviorSubject<IApiResponse | null>(null);
 
   constructor(private _httpClient: HttpClient) { }
