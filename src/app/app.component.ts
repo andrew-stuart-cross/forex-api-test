@@ -12,6 +12,11 @@ export class AppComponent {
   constructor(readonly _fetchService: FetchService) { }
 
   ngOnInit(): void {
+    this._getData();
+  }
+
+
+  private _getData(): void {
     this._fetchService.fetchList();
   }
 }
