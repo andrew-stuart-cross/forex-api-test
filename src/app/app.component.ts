@@ -19,4 +19,8 @@ export class AppComponent {
   private _getData(): void {
     this._fetchService.fetchList();
   }
+
+  public reload(): void {
+    this._getData();
+  }
 }

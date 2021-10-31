@@ -15,9 +15,9 @@
   <h1>is loading: {{dg}}</h1>
 </div>
 
-<div *ngIf="(_fetchService.loading | async) === false">
+<!-- <div *ngIf="(_fetchService.loading | async) === false">
   <h1>is loading: FALSE</h1>
-</div>
+</div> -->
 
 <!-- <div *ngIf="_fetchService.loading$ | async"><h1>Loading obs...</h1></div>
 <div *ngIf="!_fetchService.loading$ | async"><h1>Finished loading obs...</h1></div> -->
@@ -25,4 +25,13 @@
 <!-- move to child component after initial setup and testing -->
 <div *ngFor="let rate of _fetchService.rates | async">
   {{ rate.code }} | {{ rate.rate }}
+</div>
+
+
+<!-- error template -->
+<div *ngIf="(_fetchService.error | async) as ty">
+
+<h1>An error occurred...</h1>
+<h1>{{ ty }}</h1>
+<!-- 'reload' button which points at reload() -->
 </div>
