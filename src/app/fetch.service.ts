@@ -11,7 +11,7 @@ const _apiUrl = 'https://api.exchangerate-api.com/v4/latest/';
 })
 export class FetchService {
 
-  private readonly items$: BehaviorSubject<IRate[]> = new BehaviorSubject<IRate[]>([]);
+  private readonly rates$: BehaviorSubject<IRate[]> = new BehaviorSubject<IRate[]>([]);
   private readonly loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   private readonly error$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   //private readonly response$: BehaviorSubject<IApiResponse | null> = new BehaviorSubject<IApiResponse | null>(null);
@@ -23,7 +23,7 @@ export class FetchService {
     this.loading$.next(true);
 
     this._httpClient.get<IApiResponse>(`${_apiUrl}${baseCurrencyCode}`)
-      .pipe(map(data => Object.keys(data.rates).map((key) => {
+      .pipe(map(data => Object.keys(data.rates).map((key) => { // chain tap(f => {console.log(f); console.log(f.rates)}) in pipe to debug
         return <IRate>{
           code: key,
           rate: data.rates[key]
@@ -36,7 +36,7 @@ export class FetchService {
       ).subscribe(receivedItems => {
         // success handler function
         // console.log(receivedItems);
-        this.items$.next(receivedItems);
+        this.rates$.next(receivedItems);
       },
         (error => {
           // error handler function
@@ -55,7 +55,7 @@ export class FetchService {
   }
 
   public get rates(): Observable<IRate[]> {
-    return this.items$.asObservable();
+    return this.rates$.asObservable();
   }
 
   public get loading(): Observable<boolean> {
@@ -66,3 +66,10 @@ export class FetchService {
     return this.error$.asObservable();
   }
 }
+
+
+
+
+
+
+
