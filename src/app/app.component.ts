@@ -16,7 +16,7 @@ export class AppComponent {
   }
 
   private _getData(): void {
-    this._fetchService.fetchList();
+    this._fetchService.getData();
   }
 
   public reload(): void {

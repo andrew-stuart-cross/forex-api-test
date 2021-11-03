@@ -18,13 +18,25 @@ export class FetchService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  public fetchList(baseCurrencyCode: string = 'GBP'): void {
+  public get rates(): Observable<IRate[]> {
+    return this.rates$.asObservable();
+  }
+
+  public get loading(): Observable<boolean> {
+    return this.loading$.asObservable();
+  }
+
+  public get error(): Observable<boolean> {
+    return this.error$.asObservable();
+  }
+
+  public getData(baseCurrencyCode: string = 'GBP'): void {
 
     this.loading$.next(true);
 
     this._httpClient.get<IApiResponse>(`${_apiUrl}${baseCurrencyCode}`)
       .pipe(map(data => Object.keys(data.rates).map((key) => { // chain tap(f => {console.log(f); console.log(f.rates)}) in pipe to debug
-        return <IRate>{
+        return <IRate>{ // ToDo: move this to its own method
           code: key,
           rate: data.rates[key]
         }
@@ -52,18 +64,6 @@ export class FetchService {
           // ==> this.loading$.next(false); moved to finalize in pipe
         }
       )
-  }
-
-  public get rates(): Observable<IRate[]> {
-    return this.rates$.asObservable();
-  }
-
-  public get loading(): Observable<boolean> {
-    return this.loading$.asObservable();
-  }
-
-  public get error(): Observable<boolean> {
-    return this.error$.asObservable();
   }
 }
 
