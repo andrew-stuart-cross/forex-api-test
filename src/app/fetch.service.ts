@@ -30,17 +30,34 @@ export class FetchService {
     return this.error$.asObservable();
   }
 
+
+  private mapToModel(data: any): IRate[] {
+    try {
+      let mappedData = Object.keys(data).map((key) => { // chain tap(f => {console.log(f); console.log(f.rates)}) in pipe to debug
+        return <IRate>{ // ToDo: refactor this into its own method
+          code: key,
+          rate: data[key]
+        }
+      });
+      return mappedData;
+    }
+    catch {
+      return []; //ToDo: what to do here?
+    }
+  }
+
   public getData(baseCurrencyCode: string = 'GBP'): void {
 
     this.loading$.next(true);
 
     this._httpClient.get<IApiResponse>(`${_apiUrl}${baseCurrencyCode}`)
-      .pipe(map(data => Object.keys(data.rates).map((key) => { // chain tap(f => {console.log(f); console.log(f.rates)}) in pipe to debug
-        return <IRate>{ // ToDo: move this to its own method
-          code: key,
-          rate: data.rates[key]
-        }
-      })),
+      .pipe(map(data => this.mapToModel(data.rates)),
+        // .pipe(map(data => Object.keys(data.rates).map((key) => { // chain tap(f => {console.log(f); console.log(f.rates)}) in pipe to debug
+        //   return <IRate>{
+        //     code: key,
+        //     rate: data.rates[key]
+        //   }
+        // })),
         finalize(() => this.loading$.next(false))
         // error handling with catchError is handled by the http interceptor, which retries the request
         // catchError here is like the catch() block:
