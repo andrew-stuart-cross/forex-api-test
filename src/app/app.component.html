@@ -23,6 +23,9 @@
 <div *ngIf="!_fetchService.loading$ | async"><h1>Finished loading obs...</h1></div> -->
 
 <!-- move to child component after initial setup and testing -->
+
+<!-- ToDo: Rates[] length === 0 -->
+
 <div *ngFor="let rate of _fetchService.rates | async">
   {{ rate.code }} | {{ rate.rate }}
 </div>
@@ -31,8 +34,8 @@
 <!-- error template -->
 <div *ngIf="(_fetchService.error | async) as ty">
 
-<h1>An error occurred...</h1>
-<h1>error$ value: {{ ty }}</h1>
-<!-- 'reload' button which points at reload() -->
-<button (click)="reload()">Retry</button>
+  <h1>An error occurred...</h1>
+  <h1>error$ value: {{ ty }}</h1>
+  <!-- 'reload' button which points at reload() -->
+  <button (click)="reload()">Retry</button>
 </div>

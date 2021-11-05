@@ -11,67 +11,51 @@ const _apiUrl = 'https://api.exchangerate-api.com/v4/latest/';
 })
 export class FetchService {
 
-  private readonly rates$: BehaviorSubject<IRate[]> = new BehaviorSubject<IRate[]>([]);
-  private readonly loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-  private readonly error$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private readonly _error$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private readonly _loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  private readonly _rates$: BehaviorSubject<IRate[]> = new BehaviorSubject<IRate[]>([]);
   //private readonly response$: BehaviorSubject<IApiResponse | null> = new BehaviorSubject<IApiResponse | null>(null);
 
   constructor(private _httpClient: HttpClient) { }
 
-  public get rates(): Observable<IRate[]> {
-    return this.rates$.asObservable();
+  public get error(): Observable<boolean> {
+    return this._error$.asObservable();
   }
 
   public get loading(): Observable<boolean> {
-    return this.loading$.asObservable();
+    return this._loading$.asObservable();
   }
 
-  public get error(): Observable<boolean> {
-    return this.error$.asObservable();
-  }
-
-
-  private mapToModel(data: any): IRate[] {
-    try {
-      let mappedData = Object.keys(data).map((key) => { // chain tap(f => {console.log(f); console.log(f.rates)}) in pipe to debug
-        return <IRate>{ // ToDo: refactor this into its own method
-          code: key,
-          rate: data[key]
-        }
-      });
-      return mappedData;
-    }
-    catch {
-      return []; //ToDo: what to do here?
-    }
+  public get rates(): Observable<IRate[]> {
+    return this._rates$.asObservable();
   }
 
   public getData(baseCurrencyCode: string = 'GBP'): void {
 
-    this.loading$.next(true);
+    this._loading$.next(true);
 
     this._httpClient.get<IApiResponse>(`${_apiUrl}${baseCurrencyCode}`)
-      .pipe(map(data => this.mapToModel(data.rates)),
+      .pipe(map(data => this._mapToModel(data.rates)),
         // .pipe(map(data => Object.keys(data.rates).map((key) => { // chain tap(f => {console.log(f); console.log(f.rates)}) in pipe to debug
         //   return <IRate>{
         //     code: key,
         //     rate: data.rates[key]
         //   }
         // })),
-        finalize(() => this.loading$.next(false))
+        finalize(() => this._loading$.next(false))
         // error handling with catchError is handled by the http interceptor, which retries the request
         // catchError here is like the catch() block:
         // return an Observable to keep the stream 'alive' (returning an error ends the stream)
       ).subscribe(receivedItems => {
         // success handler function
         // console.log(receivedItems);
-        this.rates$.next(receivedItems);
+        this._rates$.next(receivedItems);
       },
         (error => {
           // error handler function
           // with the httpInterceptor, it returns String; or
           // without the httpInterceptor, it returns HttpErrorResponse
-          this.error$.next(true); // no need to send error to the component
+          this._error$.next(true); // no need to send error to the component
         }),
         () => {
           // completion handler function
@@ -81,6 +65,23 @@ export class FetchService {
           // ==> this.loading$.next(false); moved to finalize in pipe
         }
       )
+  }
+
+  // ToDo: what to do in the catch block
+  private _mapToModel(data: any): IRate[] {
+    try {
+      let mappedData = Object.keys(data).map((key) => {
+        return <IRate>{
+          code: key,
+          rate: data[key]
+        }
+      });
+      return mappedData;
+    }
+    catch (e) {
+      //console.log(e);
+      return []; //ToDo: what to do here?
+    }
   }
 }
 

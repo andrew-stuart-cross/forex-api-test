@@ -1,37 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-
 import { FetchService } from './fetch.service';
-
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { IApiResponse, IRate } from './_models';
-import { HttpErrorResponse } from '@angular/common/http';
+import { IRate } from './_models';
 import { skip } from 'rxjs/operators';
-import { pipe } from 'rxjs';
-
-
-export const fakeRates: IRate[] = [{ code: 'AED', rate: 5.04 }, { code: 'YER', rate: 342.25 }];
+import { fakeApiResponse, fakeRates } from './unit-test-helpers/rates-helper';
 
 const _apiUrl = 'https://api.exchangerate-api.com/v4/latest/GBP';
 
-// important to check that the object is valid JSON!
-// use https://jsonlint.com/ to validate the object
-// it causes all sorts of issues if the object is not valid!!!!!
-export const fakeApiResponse: any =
-{
-  "provider": "https://www.exchangerate-api.com",
-  "WARNING_UPGRADE_TO_V6": "https://www.exchangerate-api.com/docs/free",
-  "terms": "https://www.exchangerate-api.com/terms",
-  "base": "GBP",
-  "date": "2021-11-02",
-  "time_last_updated": 1635811201,
-  "rates": {
-    "AED": 5.04,
-    "YER": 342.25
-  }
-}
-
 describe('FetchService', () => {
-
   let controller: HttpTestingController;
   let service: FetchService;
 
@@ -49,79 +25,73 @@ describe('FetchService', () => {
   });
 
   it('makes an http call', () => {
+    // Arrange
     let actualRates: IRate[] | undefined; // undefined initial state to check if Observable emits
+    let actualErrorState: boolean | undefined;
+    let finalLoadingState: boolean | undefined;
 
+    // Act
     service.getData(); // call http request method
 
-    //console.log(actualRates);  // undefined (as it should be here)
-
-    // We expect that the Observable emits a photos array that equals to the one from the API response:
+    // We expect that the Observable emits an array that equals to the one from the API response:
     service.rates.subscribe((ratesObservable) => {
-      //console.log(ratesObservable); // [] defined, but empty (i.e. Observable emitted)
       actualRates = ratesObservable
-      //console.log(actualRates); // [] defined, but empty (i.e. Observable emitted)
     });
 
-    let actualError: boolean | undefined; // HttpErrorResponse | undefined;
-
-    service.error // skip first default 'false' value emitted...
+    service.error
       .subscribe((error) => {
-        actualError = error;
+        actualErrorState = error;
       });
 
-    let finalLoadingState: boolean | undefined;;
-
-    service.loading.pipe(skip(1))
+    service.loading.pipe(skip(1)) // skip first default 'true' value emitted...
       .subscribe((loading) => {
         finalLoadingState = loading;
       });
 
-    const request = controller.expectOne('https://api.exchangerate-api.com/v4/latest/GBP');
+    const request = controller.expectOne(_apiUrl);
     // Answer the request so the Observable emits a value.
-    request.flush(fakeApiResponse); //fakeApiResponse });  // also paste the response object in with {}
+    request.flush(fakeApiResponse); // also paste the response object in with {}
 
+    // Assert
     expect(actualRates).toEqual(fakeRates);
-    expect(actualError).toBeFalse();
+    expect(actualErrorState).toBeFalse();
     expect(finalLoadingState).toBeFalse();
   });
 
 
   it('#getData should use GET to retrieve data', () => {
     service.getData();
-    const testRequest = controller.expectOne('https://api.exchangerate-api.com/v4/latest/GBP');
-    expect(testRequest.request.method).toEqual('GET'); // passes
+    const testRequest = controller.expectOne(_apiUrl);
+    expect(testRequest.request.method).toEqual('GET');
   });
 
 
   it('passes through search errors', () => {
+    // Arrange
     const status = 500;
     const statusText = 'Internal Server Error';
     const errorEvent = new ErrorEvent('API error');
-
-    service.getData(); // call http request method
-
-    let actualError: boolean | undefined; // HttpErrorResponse | undefined;
-
-    service.error.pipe(skip(1)) // skip first default 'false' value emitted...
-      .subscribe((error) => {
-        actualError = error;
-      });
-
+    let actualErrorState: boolean | undefined;
     let finalLoadingState: boolean | undefined;;
 
-    service.loading.pipe(skip(1))
+    // Act & Assert
+    service.getData(); // call http request method
+
+    service.error.pipe(skip(1)) // skip first, default 'false' value emitted...
+      .subscribe((error) => {
+        actualErrorState = error;
+      });
+
+    service.loading.pipe(skip(1)) // skip first, default 'true' value emitted...
       .subscribe((loading) => {
         finalLoadingState = loading;
       });
 
     controller.expectOne(_apiUrl).error(errorEvent, { status, statusText });
 
-    expect(actualError).toBeTrue();
+    expect(actualErrorState).toBeTrue();
     expect(finalLoadingState).toBeFalse();
   });
 
 });
-
-
-
 
