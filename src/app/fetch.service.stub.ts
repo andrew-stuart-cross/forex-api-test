@@ -1,3 +1,3 @@
 export class FetchServiceStub {
-    public fetchList: jasmine.Spy = jasmine.createSpy('fetchList');
+    public getData: jasmine.Spy = jasmine.createSpy('getData');
 }
