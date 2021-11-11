@@ -1,19 +1,11 @@
-<h1 class="main-title">forex-api-test app is running!</h1>
-
-
-
-<!-- loading....? -->
-<!-- if -->
-
+<h1 class="hello" data-testid="increment-button">forex-api-test app is running!</h1>
 
 
 <div *ngIf="_fetchService.loading | async as jk">
   <h1>is loading: {{jk}}</h1>
 </div>
 
-<div *ngIf="(_fetchService.loading | async) as dg">
-  <h1>is loading: {{dg}}</h1>
-</div>
+
 
 <!-- <div *ngIf="(_fetchService.loading | async) === false">
   <h1>is loading: FALSE</h1>
