@@ -11,19 +11,19 @@ const _apiUrl = 'https://api.exchangerate-api.com/v4/latest/';
 })
 export class FetchService {
 
-  private readonly _error$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private readonly _loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  private readonly _isError$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private readonly _isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   private readonly _rates$: BehaviorSubject<IRate[]> = new BehaviorSubject<IRate[]>([]);
   //private readonly response$: BehaviorSubject<IApiResponse | null> = new BehaviorSubject<IApiResponse | null>(null);
 
   constructor(private _httpClient: HttpClient) { }
 
-  public get error(): Observable<boolean> {
-    return this._error$.asObservable();
+  public get isError(): Observable<boolean> {
+    return this._isError$.asObservable();
   }
 
-  public get loading(): Observable<boolean> {
-    return this._loading$.asObservable();
+  public get isLoading(): Observable<boolean> {
+    return this._isLoading$.asObservable();
   }
 
   public get rates(): Observable<IRate[]> {
@@ -32,7 +32,7 @@ export class FetchService {
 
   public getData(baseCurrencyCode: string = 'GBP'): void {
 
-    this._loading$.next(true);
+    this._isLoading$.next(true);
 
     this._httpClient.get<IApiResponse>(`${_apiUrl}${baseCurrencyCode}`)
       .pipe(map(data => this._mapToModel(data.rates)),
@@ -42,7 +42,7 @@ export class FetchService {
         //     rate: data.rates[key]
         //   }
         // })),
-        finalize(() => this._loading$.next(false))
+        finalize(() => this._isLoading$.next(false))
         // error handling with catchError is handled by the http interceptor, which retries the request
         // catchError here is like the catch() block:
         // return an Observable to keep the stream 'alive' (returning an error ends the stream)
@@ -55,7 +55,7 @@ export class FetchService {
           // error handler function
           // with the httpInterceptor, it returns String; or
           // without the httpInterceptor, it returns HttpErrorResponse
-          this._error$.next(true); // no need to send error to the component
+          this._isError$.next(true); // no need to send error to the component
         }),
         () => {
           // completion handler function
@@ -79,7 +79,7 @@ export class FetchService {
       return mappedData;
     }
     catch (e) {
-      //console.log(e);
+      // console.log(e);
       return []; //ToDo: what to do here?
     }
   }

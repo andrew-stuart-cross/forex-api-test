@@ -1,8 +1,8 @@
 <h1 class="hello" data-testid="increment-button">forex-api-test app is running!</h1>
 
 
-<div *ngIf="_fetchService.loading | async as jk">
-  <h1>is loading: {{jk}}</h1>
+<div *ngIf="_fetchService.isLoading | async as loading">
+  <h1>is loading: {{ loading }}</h1>
 </div>
 
 
@@ -18,16 +18,17 @@
 
 <!-- ToDo: Rates[] length === 0 -->
 
-<div *ngFor="let rate of _fetchService.rates | async">
-  {{ rate.code }} | {{ rate.rate }}
+<div *ngFor="let item of _fetchService.rates | async">
+  {{ item.code }} | {{ item.rate }}
 </div>
 
 
 <!-- error template -->
-<div *ngIf="(_fetchService.error | async) as ty">
+
+<div *ngIf="(_fetchService.isError | async) as error">
 
   <h1>An error occurred...</h1>
-  <h1>error$ value: {{ ty }}</h1>
+  <h1>error$ value: {{ error }}</h1>
   <!-- 'reload' button which points at reload() -->
   <button (click)="reload()">Retry</button>
 </div>

@@ -38,12 +38,12 @@ describe('FetchService', () => {
       actualRates = ratesObservable
     });
 
-    service.error
+    service.isError
       .subscribe((error) => {
         actualErrorState = error;
       });
 
-    service.loading.pipe(skip(1)) // skip first default 'true' value emitted...
+    service.isLoading.pipe(skip(1)) // skip first default 'true' value emitted...
       .subscribe((loading) => {
         finalLoadingState = loading;
       });
@@ -77,12 +77,12 @@ describe('FetchService', () => {
     // Act & Assert
     service.getData(); // call http request method
 
-    service.error.pipe(skip(1)) // skip first, default 'false' value emitted...
+    service.isError.pipe(skip(1)) // skip first, default 'false' value emitted...
       .subscribe((error) => {
         actualErrorState = error;
       });
 
-    service.loading.pipe(skip(1)) // skip first, default 'true' value emitted...
+    service.isLoading.pipe(skip(1)) // skip first, default 'true' value emitted...
       .subscribe((loading) => {
         finalLoadingState = loading;
       });

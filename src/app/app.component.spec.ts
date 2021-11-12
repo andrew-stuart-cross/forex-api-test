@@ -1,6 +1,7 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 import { AppComponent } from './app.component';
 import { FetchService } from './fetch.service';
 import { FetchServiceStub } from './fetch.service.stub';
@@ -8,28 +9,37 @@ import { FetchServiceStub } from './fetch.service.stub';
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let debugElement: DebugElement;
-  let dependencies: { fetchService: FetchServiceStub };
+  let dependencies: { _fetchService: FetchServiceStub };
 
+  //let deleteProductsSubject = new BehaviorSubject<boolean>(true);
 
   beforeEach(async () => {
 
     dependencies = {
-      fetchService: new FetchServiceStub()
+      _fetchService: new FetchServiceStub()
     };
+
+    //dependencies._fetchService.loading.and.returnValue(deleteProductsSubject.asObservable());
+
 
     await TestBed.configureTestingModule({
       declarations: [
         AppComponent
       ],
       providers: [
-        { provide: FetchService, useValue: dependencies.fetchService }
+        { provide: FetchService, useValue: dependencies._fetchService }
       ]
     }).compileComponents();
 
+    // (dependencies.fetchService.rates as jasmine.Spy).and.returnValue(of([]));
+      //{ code: 'product', rate: 1 }
+    //]);
+
     fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
+    //fixture.detectChanges();
     debugElement = fixture.debugElement;
   });
+
 
 
   // check if rates are rendered in DOM
@@ -38,9 +48,11 @@ describe('AppComponent', () => {
   // if 'retry' button is cliecked, check if getData is called...
 
   it('should call getData from service init', () => {
-    //fixture.detectChanges();  // either call here or in beforeEach() above
-    expect(dependencies.fetchService.getData).toHaveBeenCalled();
-    expect(dependencies.fetchService.getData).toHaveBeenCalledTimes(1);
+    
+    fixture.detectChanges();  // either call here or in beforeEach() above
+    expect(dependencies._fetchService.getData).toHaveBeenCalled();
+    expect(dependencies._fetchService.getData).toHaveBeenCalledTimes(1);
+
   });
 
 
@@ -68,9 +80,33 @@ describe('AppComponent', () => {
   it('FGH', () => {
 
     const userElements = debugElement.query(By.css('.main-title'));
-    console.log(userElements);
+    //console.log(userElements);
 
     //expect(userElements.).to('forex-api-test app is running!');
 
   });
+
+
+
+  // describe('on initialisation', () => {
+  //   //let deleteProductsSubject: Subject<boolean>;
+
+  //   let deleteProductsSubject = new BehaviorSubject<boolean>(true);
+  
+  //   //beforeEach(() => {
+  //     //deleteProductsSubject =  new BehaviorSubject<boolean>(true);
+  //     (dependencies.fetchService.loading as jasmine.Spy).and.returnValue(
+  //       deleteProductsSubject.asObservable()
+  //     );
+  //   //});
+  
+  //   beforeEach(() => {
+  //     deleteProductsSubject = new Subject();
+  //     (dependencies.fetchService.loading as jasmine.Spy).and.returnValue(
+  //       deleteProductsSubject.asObservable()
+  //     );
+  //   });
+  // });
+
+
 });

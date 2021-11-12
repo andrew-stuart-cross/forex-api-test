@@ -1,7 +1,8 @@
 export class FetchServiceStub {
     public getData: jasmine.Spy = jasmine.createSpy('getData');
-    //
-    // public error: jasmine.Spy = jasmine.createSpy('error');
-    // public loading: jasmine.Spy = jasmine.createSpy('loading');
-    // public rates: jasmine.Spy = jasmine.createSpy('rates');
+
+    // not stubbed as unit test inappropriaee.  Integration test better as linked to template
+    //public rates: jasmine.Spy = jasmine.createSpy('rates');
+    //public isError: jasmine.Spy = jasmine.createSpy('isError');
+    //public isLoading: jasmine.Spy = jasmine.createSpy('isLoading');
 }
