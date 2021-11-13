@@ -26,7 +26,7 @@ export class FetchService {
     return this._isLoading$.asObservable();
   }
 
-  public get rates(): Observable<IRate[]> {
+  public get getRates(): Observable<IRate[]> {
     return this._rates$.asObservable();
   }
 
@@ -51,11 +51,10 @@ export class FetchService {
         // console.log(receivedItems);
         this._rates$.next(receivedItems);
       },
-        (error => {
+        (error => { this._handleError(error);
           // error handler function
           // with the httpInterceptor, it returns String; or
           // without the httpInterceptor, it returns HttpErrorResponse
-          this._isError$.next(true); // no need to send error to the component
         }),
         () => {
           // completion handler function
@@ -65,6 +64,10 @@ export class FetchService {
           // ==> this.loading$.next(false); moved to finalize in pipe
         }
       )
+  }
+
+  private _handleError(error: any) { // no need to send error to the component...
+    this._isError$.next(true);
   }
 
   // ToDo: what to do in the catch block
@@ -84,10 +87,3 @@ export class FetchService {
     }
   }
 }
-
-
-
-
-
-
-

@@ -18,7 +18,7 @@
 
 <!-- ToDo: Rates[] length === 0 -->
 
-<div *ngFor="let item of _fetchService.rates | async">
+<div *ngFor="let item of _fetchService.getRates | async">
   {{ item.code }} | {{ item.rate }}
 </div>
 

@@ -34,7 +34,7 @@ describe('FetchService', () => {
     service.getData(); // call http request method
 
     // We expect that the Observable emits an array that equals to the one from the API response:
-    service.rates.subscribe((ratesObservable) => {
+    service.getRates.subscribe((ratesObservable) => {
       actualRates = ratesObservable
     });
 
