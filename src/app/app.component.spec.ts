@@ -1,10 +1,16 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { BehaviorSubject, of, Subject } from 'rxjs';
 import { AppComponent } from './app.component';
 import { FetchService } from './fetch.service';
 import { FetchServiceStub } from './fetch.service.stub';
+
+
+// INTEGRATION tests are better here.  
+// There is no logic.  It is all in the service.
+// Question is here is: does the component get and display the data from the service?
+// So integraion...
+
+
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -74,17 +80,10 @@ describe('AppComponent', () => {
     //fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.hello')?.textContent).toContain('forex-api-test app is running!');
-    expect(compiled.querySelector('[data-testid="increment-button"]')?.textContent).toContain('forex-api-test app is running!');
+    expect(compiled.querySelector('[data-testid="main-title"]')?.textContent).toContain('forex-api-test app is running!');
   });
 
-  it('FGH', () => {
 
-    const userElements = debugElement.query(By.css('.main-title'));
-    //console.log(userElements);
-
-    //expect(userElements.).to('forex-api-test app is running!');
-
-  });
 
 
 
@@ -108,5 +107,15 @@ describe('AppComponent', () => {
   //   });
   // });
 
+
+});
+
+
+describe('AppComponent integration tests', () => {
+
+
+  it('whatever...', () => {
+
+  });
 
 });

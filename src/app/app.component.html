@@ -1,7 +1,7 @@
-<h1 class="hello" data-testid="increment-button">forex-api-test app is running!</h1>
+<h1 class="hello" data-testid="main-title">forex-api-test app is running!</h1>
 
 
-<div *ngIf="_fetchService.isLoading | async as loading">
+<div *ngIf="(_fetchService.isLoading | async) as loading">
   <h1>is loading: {{ loading }}</h1>
 </div>
 
@@ -26,9 +26,7 @@
 <!-- error template -->
 
 <div *ngIf="(_fetchService.isError | async) as error">
-
   <h1>An error occurred...</h1>
   <h1>error$ value: {{ error }}</h1>
-  <!-- 'reload' button which points at reload() -->
-  <button (click)="reload()">Retry</button>
+  <button data-testid="reload-button" (click)="reload()">Retry</button>
 </div>
