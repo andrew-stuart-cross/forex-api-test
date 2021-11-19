@@ -1,31 +1,39 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { AppComponent } from './app.component';
 import { FetchService } from './fetch.service';
-import { FetchServiceStub } from './fetch.service.stub';
-
-
-// INTEGRATION tests are better here.  
-// There is no logic.  It is all in the service.
-// Question is here is: does the component get and display the data from the service?
-// So integraion...
-
+import { fakeRates } from './unit-test-helpers/rates-helper';
 
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let debugElement: DebugElement;
-  let dependencies: { _fetchService: FetchServiceStub };
+  //let dependencies: { _fetchService: FetchServiceStub };
 
-  //let deleteProductsSubject = new BehaviorSubject<boolean>(true);
+  let loadingPropertyValue: boolean = true;
+  let errorPropertyValue: boolean = false;
+
+  let fakeFetchService: FetchService;
+
 
   beforeEach(async () => {
 
-    dependencies = {
-      _fetchService: new FetchServiceStub()
-    };
+    // dependencies = {
+    //   _fetchService: new FetchServiceStub()
+    // };
 
-    //dependencies._fetchService.loading.and.returnValue(deleteProductsSubject.asObservable());
+    fakeFetchService = jasmine.createSpyObj<FetchService>(
+      'FetchService',
+      {
+        getData: undefined,
+      },
+      {
+        isLoading: of(loadingPropertyValue),
+        isError: of(errorPropertyValue),
+        getRates: of(fakeRates)
+      }
+    );
 
 
     await TestBed.configureTestingModule({
@@ -33,13 +41,9 @@ describe('AppComponent', () => {
         AppComponent
       ],
       providers: [
-        { provide: FetchService, useValue: dependencies._fetchService }
+        { provide: FetchService, useValue: fakeFetchService }
       ]
     }).compileComponents();
-
-    // (dependencies.fetchService.rates as jasmine.Spy).and.returnValue(of([]));
-      //{ code: 'product', rate: 1 }
-    //]);
 
     fixture = TestBed.createComponent(AppComponent);
     //fixture.detectChanges();
@@ -54,11 +58,9 @@ describe('AppComponent', () => {
   // if 'retry' button is cliecked, check if getData is called...
 
   it('should call getData from service init', () => {
-    
     fixture.detectChanges();  // either call here or in beforeEach() above
-    expect(dependencies._fetchService.getData).toHaveBeenCalled();
-    expect(dependencies._fetchService.getData).toHaveBeenCalledTimes(1);
-
+    expect(fakeFetchService.getData).toHaveBeenCalled();
+    expect(fakeFetchService.getData).toHaveBeenCalledTimes(1);
   });
 
 
@@ -84,37 +86,20 @@ describe('AppComponent', () => {
   });
 
 
+  describe('loading..........', () => {
 
 
 
-  // describe('on initialisation', () => {
-  //   //let deleteProductsSubject: Subject<boolean>;
-
-  //   let deleteProductsSubject = new BehaviorSubject<boolean>(true);
-  
-  //   //beforeEach(() => {
-  //     //deleteProductsSubject =  new BehaviorSubject<boolean>(true);
-  //     (dependencies.fetchService.loading as jasmine.Spy).and.returnValue(
-  //       deleteProductsSubject.asObservable()
-  //     );
-  //   //});
-  
-  //   beforeEach(() => {
-  //     deleteProductsSubject = new Subject();
-  //     (dependencies.fetchService.loading as jasmine.Spy).and.returnValue(
-  //       deleteProductsSubject.asObservable()
-  //     );
-  //   });
-  // });
+    it('shows loading text when isLoading is true', () => {
 
 
-});
+      fixture.detectChanges();
 
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('[data-testid="loading-header"]')?.textContent).toContain('is loading: true');
 
-describe('AppComponent integration tests', () => {
+    });
 
-
-  it('whatever...', () => {
 
   });
 
