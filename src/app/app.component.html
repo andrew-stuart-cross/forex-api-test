@@ -4,15 +4,12 @@
   <h1 data-testid="loading-header">is loading: {{ loading }}</h1>
 </div>
 
-<!-- move to child component after initial setup and testing -->
-
 <!-- ToDo: Rates[] length === 0 -->
 
 <div *ngFor="let item of _fetchService.getRates | async" data-testid="main-content">
+  <!-- move to child component after initial setup and testing -->
   {{ item.code }} | {{ item.rate }}
 </div>
-
-<!-- error template -->
 
 <div *ngIf="(_fetchService.isError | async) as error" data-testid="error-content">
   <h1 data-testid="error-header">is error: {{ error }}</h1>
