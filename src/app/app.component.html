@@ -18,15 +18,14 @@
 
 <!-- ToDo: Rates[] length === 0 -->
 
-<div *ngFor="let item of _fetchService.getRates | async">
+<div *ngFor="let item of _fetchService.getRates | async" data-testid="main-content">
   {{ item.code }} | {{ item.rate }}
 </div>
 
 
 <!-- error template -->
 
-<div *ngIf="(_fetchService.isError | async) as error">
-  <h1>An error occurred...</h1>
-  <h1>error$ value: {{ error }}</h1>
+<div *ngIf="(_fetchService.isError | async) as error" data-testid="error-content">
+  <h1 data-testid="error-header">is error: {{ error }}</h1>
   <button data-testid="reload-button" (click)="reload()">Retry</button>
 </div>
