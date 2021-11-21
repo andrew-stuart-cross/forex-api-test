@@ -1,18 +1,8 @@
 <h1 class="hello" data-testid="main-title">forex-api-test app is running!</h1>
 
-
 <div *ngIf="(_fetchService.isLoading | async) as loading">
   <h1 data-testid="loading-header">is loading: {{ loading }}</h1>
 </div>
-
-
-
-<!-- <div *ngIf="(_fetchService.loading | async) === false">
-  <h1>is loading: FALSE</h1>
-</div> -->
-
-<!-- <div *ngIf="_fetchService.loading$ | async"><h1>Loading obs...</h1></div>
-<div *ngIf="!_fetchService.loading$ | async"><h1>Finished loading obs...</h1></div> -->
 
 <!-- move to child component after initial setup and testing -->
 
@@ -21,7 +11,6 @@
 <div *ngFor="let item of _fetchService.getRates | async" data-testid="main-content">
   {{ item.code }} | {{ item.rate }}
 </div>
-
 
 <!-- error template -->
 

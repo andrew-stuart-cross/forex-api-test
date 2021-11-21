@@ -1,11 +1,10 @@
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
 import { AppComponent } from './app.component';
 import { FetchService } from './fetch.service';
 import { fakeRates } from './unit-test-helpers/rates-helper';
-
 
 let fakeLoading$: Observable<boolean>;
 let fakeError$: Observable<boolean>;
@@ -14,17 +13,10 @@ let fakeError$: Observable<boolean>;
 describe('AppComponent - fake service (SpyObj) with no logic', () => {
   let fixture: ComponentFixture<AppComponent>;
   let debugElement: DebugElement;
-  //let dependencies: { _fetchService: FetchServiceStub };
-
   let fakeFetchService: FetchService;
 
   beforeEach(async () => {
 
-    // dependencies = {
-    //   _fetchService: new FetchServiceStub()
-    // };
-
-    // one cannot test if the Component re-renders appropriate content as the properties are changed
     fakeFetchService = jasmine.createSpyObj<FetchService>(
       'FetchService',
       {
@@ -53,9 +45,7 @@ describe('AppComponent - fake service (SpyObj) with no logic', () => {
 
 
   it('should create the app', () => {
-    //const fixture = TestBed.createComponent(AppComponent);
     const component = fixture.componentInstance;
-    //console.log(component);
     expect(component).toBeTruthy();
   });
 
@@ -66,7 +56,6 @@ describe('AppComponent - fake service (SpyObj) with no logic', () => {
   });
 
   it('should render title', () => {
-    //const fixture = TestBed.createComponent(AppComponent);
     //fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.hello')?.textContent).toContain('forex-api-test app is running!');
@@ -87,8 +76,8 @@ describe('AppComponent - fake service (SpyObj) with no logic', () => {
 
     it('should render rates', fakeAsync(() => {
       const compiled = fixture.nativeElement as HTMLElement;
-      tick(100);
-      console.log(compiled.querySelector('[data-testid="main-content"]')?.textContent);
+      tick();
+      //console.log(compiled.querySelector('[data-testid="main-content"]')?.textContent);
       expect(compiled.querySelector('[data-testid="main-content"]')?.textContent).toBeDefined();
       expect(compiled.querySelector('[data-testid="main-content"]')?.textContent).toContain('AED | 5.04');
     }));
@@ -115,7 +104,6 @@ describe('AppComponent - test when loading', () => {
         getRates: undefined // of(fakeRates)
       }
     );
-
 
     await TestBed.configureTestingModule({
       declarations: [
@@ -167,7 +155,6 @@ describe('AppComponent - test when error', () => {
       }
     );
 
-
     await TestBed.configureTestingModule({
       declarations: [
         AppComponent
@@ -218,6 +205,9 @@ describe('AppComponent - test when error', () => {
 
 
 
+// trying to create a real object fake service is way too complicated.
+// several private properties.
+// no need either because component has no logic...
 
     // fakeFetchService = {
 
