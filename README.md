@@ -1,6 +1,20 @@
 # ForexApiTest
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.10.
+This project is used for unit test practice.
+
+```
+Code coverage summary (as of 23/06/2002):
+=============================== Coverage summary ===============================
+Statements   : 93.54% ( 29/31 )
+Branches     : 100% ( 1/1 )
+Functions    : 94.11% ( 16/17 )
+Lines        : 92.85% ( 26/28 )
+================================================================================
+(source: ng test --code-coverage)
+```
+
+This project was updated to Angular cli version 14 on 22/06/2022.
+
 
 ## Development server
 
