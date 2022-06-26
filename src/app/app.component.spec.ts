@@ -185,7 +185,7 @@ describe('AppComponent - test when error', () => {
     expect(compiled.querySelector('[data-testid="error-header"]')?.textContent).toContain('is error: true');
   });
 
-  it('error button on click calls reload()', fakeAsync(() => {
+  it('error reload button on click calls reload()', fakeAsync(() => {
     // Arrange
     const component = fixture.componentInstance;
     const reloadMethod = spyOn(component, 'reload');

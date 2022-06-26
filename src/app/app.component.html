@@ -1,17 +1,21 @@
 <h1 class="hello" data-testid="main-title">forex-api-test app is running!</h1>
 
-<div *ngIf="(_fetchService.isLoading | async) as loading">
+<ng-template *ngIf="(_fetchService.isLoading | async) as loading">
   <h1 data-testid="loading-header">is loading: {{ loading }}</h1>
-</div>
+</ng-template>
 
 <!-- ToDo: Rates[] length === 0 -->
 
-<div *ngFor="let item of _fetchService.getRates | async" data-testid="main-content">
+<ng-template *ngFor="let item of _fetchService.getRates | async">
+  <div data-testid="main-content">
+    {{ item.code }} | {{ item.rate }}
+  </div>
   <!-- move to child component after initial setup and testing -->
-  {{ item.code }} | {{ item.rate }}
-</div>
+</ng-template>
 
-<div *ngIf="(_fetchService.isError | async) as error" data-testid="error-content">
-  <h1 data-testid="error-header">is error: {{ error }}</h1>
-  <button data-testid="reload-button" (click)="reload()">Retry</button>
-</div>
+<ng-template *ngIf="(_fetchService.isError | async) as error">
+  <div data-testid="error-content">
+    <h1 data-testid="error-header">is error: {{ error }}</h1>
+    <button data-testid="reload-button" (click)="reload()">Retry</button>
+  </div>
+</ng-template>
