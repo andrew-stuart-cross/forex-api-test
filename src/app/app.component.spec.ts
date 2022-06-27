@@ -1,13 +1,13 @@
-import { DebugElement } from '@angular/core';
+import { DebugElement, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { AppComponent } from './app.component';
 import { FetchService } from './fetch.service';
 import { fakeRates } from './unit-test-helpers/rates-helper';
 
-let fakeLoading$: Observable<boolean>;
-let fakeError$: Observable<boolean>;
+// let fakeLoading$: Observable<boolean>;
+// let fakeError$: Observable<boolean>;
 
 
 describe('AppComponent - fake service (SpyObj) with no logic', () => {
@@ -33,6 +33,7 @@ describe('AppComponent - fake service (SpyObj) with no logic', () => {
       declarations: [
         AppComponent
       ],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: FetchService, useValue: fakeFetchService }
       ]
@@ -50,13 +51,11 @@ describe('AppComponent - fake service (SpyObj) with no logic', () => {
   });
 
   it(`should have as title 'forex-api-test'`, () => {
-    //const fixture = TestBed.createComponent(AppComponent);
     const component = fixture.componentInstance;
     expect(component.title).toEqual('forex-api-test');
   });
 
   it('should render title', () => {
-    //fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.hello')?.textContent).toContain('forex-api-test app is running!');
     expect(compiled.querySelector('[data-testid="main-title"]')?.textContent).toContain('forex-api-test app is running!');
@@ -109,6 +108,7 @@ describe('AppComponent - test when loading', () => {
       declarations: [
         AppComponent
       ],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: FetchService, useValue: fakeFetchService }
       ]
@@ -120,8 +120,19 @@ describe('AppComponent - test when loading', () => {
   });
 
   it('shows loading content', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('[data-testid="loading-header"]')?.textContent).toContain('is loading: true');
+    //const compiled = fixture.nativeElement as HTMLElement;
+    //expect(compiled.querySelector('[data-testid="loading-header"]')?.textContent).toContain('is loading: true');
+    
+    //fixture.detectChanges();
+
+    // Test without the helper
+    const { debugElement } = fixture;
+    const loading = debugElement.query(By.css('app-loading'));
+    expect(loading).toBeTruthy();
+
+    // Test using the spec-helper function
+    const loading1 = findComponent(fixture, 'app-loading');
+    expect(loading1).toBeTruthy();
   });
 
   it('hides main content', () => {
@@ -159,6 +170,7 @@ describe('AppComponent - test when error', () => {
       declarations: [
         AppComponent
       ],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: FetchService, useValue: fakeFetchService }
       ]
@@ -170,8 +182,11 @@ describe('AppComponent - test when error', () => {
   });
 
   it('hides loading content', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('[data-testid="loading-header"]')?.textContent).toBeUndefined();
+    // const compiled = fixture.nativeElement as HTMLElement;
+    // expect(compiled.querySelector('[data-testid="loading-header"]')?.textContent).toBeUndefined();
+    const { debugElement } = fixture;
+    const loading = debugElement.query(By.css('app-loading'));
+    expect(loading).toBeFalsy();
   });
 
   it('hides main content', () => {
@@ -182,7 +197,7 @@ describe('AppComponent - test when error', () => {
   it('shows error content', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('[data-testid="error-content"]')?.textContent).toBeDefined();
-    expect(compiled.querySelector('[data-testid="error-header"]')?.textContent).toContain('is error: true');
+    expect(compiled.querySelector('[data-testid="error-header"]')?.textContent).toContain('......ERROR.......');
   });
 
   it('error reload button on click calls reload()', fakeAsync(() => {
@@ -203,6 +218,45 @@ describe('AppComponent - test when error', () => {
   }));
 });
 
+
+// /**
+//  * Finds a nested Component by its selector, e.g. `app-example`.
+//  * Throws an error if no element was found.
+//  * Use this only for shallow component testing.
+//  * When finding other elements, use `findEl` / `findEls` and `data-testid` attributes.
+//  *
+//  * @param fixture Fixture of the parent Component
+//  * @param selector Element selector, e.g. `app-example`
+//  */
+export function findComponent<T>(
+  fixture: ComponentFixture<T>,
+  selector: string,
+): DebugElement {
+  return queryByCss(fixture, selector);
+}
+
+/**
+ * Finds a single element inside the Component by the given CSS selector.
+ * Throws an error if no element was found.
+ *
+ * @param fixture Component fixture
+ * @param selector CSS selector
+ *
+ */
+export function queryByCss<T>(
+  fixture: ComponentFixture<T>,
+  selector: string,
+): DebugElement {
+  // The return type of DebugElement#query() is declared as DebugElement,
+  // but the actual return type is DebugElement | null.
+  // See https://github.com/angular/angular/issues/22449.
+  const debugElement = fixture.debugElement.query(By.css(selector));
+  // Fail on null so the return type is always DebugElement.
+  if (!debugElement) {
+    throw new Error(`queryByCss: Element with ${selector} not found`);
+  }
+  return debugElement;
+}
 
 
 // trying to create a real object fake service is way too complicated.

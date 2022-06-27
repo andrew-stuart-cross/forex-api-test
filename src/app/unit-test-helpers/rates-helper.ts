@@ -2,7 +2,6 @@ import { IRate } from "../_models";
 
 export const fakeRates: IRate[] = [{ code: 'AED', rate: 5.04 }, { code: 'YER', rate: 342.25 }];
 
-
 // important to check that the object is valid JSON!
 // use https://jsonlint.com/ to validate the object
 // it causes all sorts of issues if the object is not valid!!!!!
