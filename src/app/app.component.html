@@ -15,7 +15,6 @@
 </ng-container>
 
 <ng-template #errorTemplate>
-  <!-- *ngIf="(_fetchService.isError | async) as error"> -->
   <div data-testid="error-content">
     <h1 data-testid="error-header">......ERROR.......</h1>
     <button data-testid="reload-button" (click)="reload()">Retry</button>

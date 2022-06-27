@@ -122,7 +122,7 @@ describe('AppComponent - test when loading', () => {
   it('shows loading content', () => {
     //const compiled = fixture.nativeElement as HTMLElement;
     //expect(compiled.querySelector('[data-testid="loading-header"]')?.textContent).toContain('is loading: true');
-    
+
     //fixture.detectChanges();
 
     // Test without the helper
@@ -198,6 +198,7 @@ describe('AppComponent - test when error', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('[data-testid="error-content"]')?.textContent).toBeDefined();
     expect(compiled.querySelector('[data-testid="error-header"]')?.textContent).toContain('......ERROR.......');
+    expect(compiled.querySelector('[data-testid="reload-button"]')?.textContent).toBeDefined();
   });
 
   it('error reload button on click calls reload()', fakeAsync(() => {
@@ -219,15 +220,15 @@ describe('AppComponent - test when error', () => {
 });
 
 
-// /**
-//  * Finds a nested Component by its selector, e.g. `app-example`.
-//  * Throws an error if no element was found.
-//  * Use this only for shallow component testing.
-//  * When finding other elements, use `findEl` / `findEls` and `data-testid` attributes.
-//  *
-//  * @param fixture Fixture of the parent Component
-//  * @param selector Element selector, e.g. `app-example`
-//  */
+/**
+ * Finds a nested Component by its selector, e.g. `app-example`.
+ * Throws an error if no element was found.
+ * Use this only for shallow component testing.
+ * When finding other elements, use `findEl` / `findEls` and `data-testid` attributes.
+ *
+ * @param fixture Fixture of the parent Component
+ * @param selector Element selector, e.g. `app-example`
+ */
 export function findComponent<T>(
   fixture: ComponentFixture<T>,
   selector: string,
