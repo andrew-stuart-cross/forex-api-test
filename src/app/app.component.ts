@@ -5,6 +5,7 @@ import { FetchService } from './fetch.service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+  providers: [ FetchService ],
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {

@@ -3,12 +3,12 @@
 This project is used for unit test practice.
 
 ```
-Code coverage summary (as of 27/06/2022):
+Code coverage summary (as of 28/06/2022):
 =============================== Coverage summary ===============================
-Statements   : 93.93% ( 31/33 )
+Statements   : 94.44% ( 34/36 )
 Branches     : 100% ( 1/1 )
-Functions    : 94.11% ( 16/17 )
-Lines        : 93.1% ( 27/29 )
+Functions    : 94.44% ( 17/18 )
+Lines        : 93.75% ( 30/32 )
 ================================================================================
 (source: ng test --code-coverage)
 ```

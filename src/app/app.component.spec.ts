@@ -6,8 +6,21 @@ import { AppComponent } from './app.component';
 import { FetchService } from './fetch.service';
 import { fakeRates } from './unit-test-helpers/rates-helper';
 
-// let fakeLoading$: Observable<boolean>;
-// let fakeError$: Observable<boolean>;
+/**
+ * If the service is provided at the root (i.e. @Injectable({providedIn: 'root'}),
+ * then provide the fake service in .configureTestingModule (see commented out section in the TestBeds below)
+ * Note: Services that are providedIn: "root" are application singletons
+ * If the service manages some private state, 
+ * then two components using the same service can stomp on each other’s state value
+ * , or, if you’re doing reactive programming and creating a view model in a component
+ * that composes RxJS observables from a service that is specific to the component. 
+ * In those cases, we need to provide the service in the component’s providers.
+ * 
+ * If the service is provided in the component's providers (i.e. providers: [ FetchService ]),
+ * then provide the fake service in .overrideComponent (see unit tests below)
+ * 
+ * see: https://medium.com/ngconf/how-to-override-component-providers-in-angular-unit-tests-b73b47b582e3
+ */
 
 
 describe('AppComponent - fake service (SpyObj) with no logic', () => {
@@ -33,11 +46,20 @@ describe('AppComponent - fake service (SpyObj) with no logic', () => {
       declarations: [
         AppComponent
       ],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [
-        { provide: FetchService, useValue: fakeFetchService }
-      ]
-    }).compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]//,
+      // providers: [
+      //   { provide: FetchService, useValue: fakeFetchService }
+      // ]
+    })
+      .overrideComponent(AppComponent,
+        {
+          set: {
+            providers: [{ provide: FetchService, useValue: fakeFetchService }]
+          }
+        })
+
+      .compileComponents();
+    // });
 
     fixture = TestBed.createComponent(AppComponent);
     //fixture.detectChanges();
@@ -108,11 +130,19 @@ describe('AppComponent - test when loading', () => {
       declarations: [
         AppComponent
       ],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [
-        { provide: FetchService, useValue: fakeFetchService }
-      ]
-    }).compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]//,
+      // providers: [
+      //   { provide: FetchService, useValue: fakeFetchService }
+      // ]
+    })
+      .overrideComponent(AppComponent,
+        //set: { providers: [{ provide: FetchService, useValue: fakeFetchService }]}
+        {
+          set: {
+            providers: [{ provide: FetchService, useValue: fakeFetchService }]
+          }
+        })
+      .compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
@@ -170,11 +200,19 @@ describe('AppComponent - test when error', () => {
       declarations: [
         AppComponent
       ],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [
-        { provide: FetchService, useValue: fakeFetchService }
-      ]
-    }).compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]//,
+      // providers: [
+      //   { provide: FetchService, useValue: fakeFetchService }
+      // ]
+    })
+      .overrideComponent(AppComponent,
+        //set: { providers: [{ provide: FetchService, useValue: fakeFetchService }]}
+        {
+          set: {
+            providers: [{ provide: FetchService, useValue: fakeFetchService }]
+          }
+        })
+      .compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();

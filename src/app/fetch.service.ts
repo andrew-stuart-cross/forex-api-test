@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { finalize, map, takeUntil } from 'rxjs/operators';
 import { IApiResponse, IRate } from './_models';
 
 const _apiUrl = 'https://api.exchangerate-api.com/v4/latest/';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class FetchService {
-
+@Injectable(// { providedIn: 'root' }
+)
+export class FetchService implements OnDestroy {
+  private _subscription = new Subject();
   private readonly _isError$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private readonly _isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   private readonly _rates$: BehaviorSubject<IRate[]> = new BehaviorSubject<IRate[]>([]);
@@ -34,7 +33,8 @@ export class FetchService {
     this._isLoading$.next(true);
 
     this._httpClient.get<IApiResponse>(`${_apiUrl}${baseCurrencyCode}`)
-      .pipe(map(data => this._mapToModel(data.rates)), finalize(() => this._isLoading$.next(false)))
+      .pipe(map(data => this._mapToModel(data.rates)), finalize(() => {this._isLoading$.next(false)}), takeUntil(this._subscription))
+      //.pipe(map(data => this._mapToModel(data.rates)), finalize(() => { this._isLoading$.next(false) }))
       .subscribe({
         next: (r) => {
           this._rates$.next(r);
@@ -93,5 +93,11 @@ export class FetchService {
       // console.log(e);
       return []; //ToDo: what to do here?
     }
+  }
+
+  ngOnDestroy(): void {
+    //alert('Method not implemented.');
+    this._subscription.next('');
+    this._subscription.complete();
   }
 }
