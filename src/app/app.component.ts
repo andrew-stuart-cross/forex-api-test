@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { ArrayMethodsService } from './array-methods.service';
 import { FetchService } from './fetch.service';
 
 @Component({
@@ -11,10 +12,11 @@ import { FetchService } from './fetch.service';
 export class AppComponent {
   title = 'forex-api-test';
 
-  constructor(readonly _fetchService: FetchService) { }
+  constructor(readonly _fetchService: FetchService, private s: ArrayMethodsService) { }
 
   ngOnInit(): void {
-    this._getData();
+    this.s.hello();
+    //this._getData();
   }
 
   private _getData(): void {

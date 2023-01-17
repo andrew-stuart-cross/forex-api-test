@@ -206,7 +206,6 @@ describe('AppComponent - test when error', () => {
       // ]
     })
       .overrideComponent(AppComponent,
-        //set: { providers: [{ provide: FetchService, useValue: fakeFetchService }]}
         {
           set: {
             providers: [{ provide: FetchService, useValue: fakeFetchService }]
